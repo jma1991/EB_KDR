@@ -175,12 +175,14 @@ Cluster on the corrected PCA to obtain a partitioning of the cells:
 snn <- buildSNNGraph(mnn, type = "jaccard", use.dimred = "corrected")
 
 com <- igraph::cluster_louvain(snn)
+
+sce$cluster.temp <- factor(com$membership)
 ```
 
 Tabulate number of cells from multiple batches within each cluster:
 
 ```{r}
-tab <- table(Cluster = com$membership, Batch = mnn$batch)
+tab <- table(Cluster = sce$cluster.temp, Batch = mnn$batch)
 
 col <- colorRampPalette(RColorBrewer::brewer.pal(n = 5, name = "Blues"))(100)
 
@@ -192,9 +194,9 @@ pheatmap(tab, color = col, display_numbers = TRUE, number_format = "%d", cluster
 Visualize the corrected PCA:
 
 ```{r}
-ggcells(mnn, aes(corrected.1, corrected.2, colour = cluster)) + 
+ggcells(mnn, aes(corrected.1, corrected.2, colour = cluster.temp)) + 
   geom_point(size = 1) + 
-  scale_colour_manual(values = MouseGastrulationData::EmbryoCelltypeColours) + 
+  scale_colour_brewer(palette = "Set1") + 
   labs(x = "PCA 1", y = "PCA 2") + 
   facet_wrap(~ batch) + 
   theme_no_axes() + 
@@ -214,7 +216,7 @@ Visualize the corrected PCA using a TSNE plot:
 ```{r}
 ggcells(mnn, aes(TSNE.1, TSNE.2, colour = celltype)) +
   geom_point(size = 1) + 
-  scale_colour_manual(values = MouseGastrulationData::EmbryoCelltypeColours) + 
+  scale_colour_brewer(palette = "Set1") + 
   labs(x = "TSNE 1", y = "TSNE 2") +
   facet_wrap(~ batch) +
   theme_no_axes() + 
@@ -234,7 +236,7 @@ Visualize the corrected PCA using a UMAP plot:
 ```{r}
 ggcells(mnn, aes(UMAP.1, UMAP.2, colour = celltype)) +
   geom_point(size = 1) +
-  scale_colour_manual(values = MouseGastrulationData::EmbryoCelltypeColours) + 
+  scale_colour_brewer(palette = "Set1") + 
   labs(x = "UMAP 1", y = "UMAP 2") +
   facet_wrap(~ batch) +
   theme_no_axes() + 
@@ -244,6 +246,12 @@ ggcells(mnn, aes(UMAP.1, UMAP.2, colour = celltype)) +
 ## Summary
 
 ### Output
+
+Remove temporary clustering:
+
+```{r}
+sce$cluster.temp <- NULL
+```
 
 Save experiment object to disk:
 
