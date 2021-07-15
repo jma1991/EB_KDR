@@ -176,13 +176,13 @@ snn <- buildSNNGraph(mnn, type = "jaccard", use.dimred = "corrected")
 
 com <- igraph::cluster_louvain(snn)
 
-sce$cluster.temp <- factor(com$membership)
+mnn$cluster.temp <- factor(com$membership)
 ```
 
 Tabulate number of cells from multiple batches within each cluster:
 
 ```{r}
-tab <- table(Cluster = sce$cluster.temp, Batch = mnn$batch)
+tab <- table(Cluster = mnn$cluster.temp, Batch = mnn$batch)
 
 col <- colorRampPalette(RColorBrewer::brewer.pal(n = 5, name = "Blues"))(100)
 
