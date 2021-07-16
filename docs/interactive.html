@@ -500,16 +500,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjma1991EBKDRtreee2510b2dbac224e98aa71781f2c1876bfbf09f42targetblanke2510b2a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jma1991/EB_KDR/tree/e2510b2dbac224e98aa71781f2c1876bfbf09f42" target="_blank">e2510b2</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjma1991EBKDRtree25b8713907bc9cbfc1283bd54244daf37dea5492targetblank25b8713a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jma1991/EB_KDR/tree/25b8713907bc9cbfc1283bd54244daf37dea5492" target="_blank">25b8713</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjma1991EBKDRtreee2510b2dbac224e98aa71781f2c1876bfbf09f42targetblanke2510b2a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjma1991EBKDRtree25b8713907bc9cbfc1283bd54244daf37dea5492targetblank25b8713a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jma1991/EB_KDR/tree/e2510b2dbac224e98aa71781f2c1876bfbf09f42" target="_blank">e2510b2</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jma1991/EB_KDR/tree/25b8713907bc9cbfc1283bd54244daf37dea5492" target="_blank">25b8713</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -518,6 +518,7 @@ Note that you need to be careful to ensure that all relevant files for the analy
 Ignored files:
     Ignored:    .Rproj.user/
     Ignored:    analysis/cache/
+    Ignored:    shiny/
 
 Untracked files:
     Untracked:  _workflowr.R
@@ -567,6 +568,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jma1991/EB_KDR/blob/25b8713907bc9cbfc1283bd54244daf37dea5492/analysis/interactive.Rmd" target="_blank">25b8713</a>
+</td>
+<td>
+James Ashmore
+</td>
+<td>
+2021-07-16
+</td>
+<td>
+Build
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jma1991/EB_KDR/a07750e32df854fdb6cb0da21c075c6507923dad/docs/interactive.html" target="_blank">a07750e</a>
+</td>
+<td>
+James Ashmore
+</td>
+<td>
+2021-07-16
+</td>
+<td>
+Build
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -668,7 +703,7 @@ rownames(sce) &lt;- scuttle::uniquifyFeatureNames(rowData(sce)$gene_id, rowData(
 
 # Define column data variables
 sce$EGFP &lt;- counts(sce)[&quot;EGFP&quot;, ] &gt; 0
-sce$Etv2 &lt; counts(sce)[&quot;Etv2&quot;, ] &gt; 0
+sce$Etv2 &lt;- counts(sce)[&quot;Etv2&quot;, ] &gt; 0
 sce$Kdr &lt;- counts(sce)[&quot;Kdr&quot;, ] &gt; 0
 sce$EGFP_AND_Etv2 &lt;- sce$EGFP &amp; sce$Kdr
 sce$Etv2_AND_Kdr &lt;- sce$Etv2 &amp; sce$Kdr
@@ -741,18 +776,19 @@ iSEE(sce, appTitle = &quot;EB_KDR&quot;, colormap = ecm)</code></pre>
 <p>Deploy the iSEE application to the shiny server:</p>
 <pre class="r"><code>deployApp(appDir = &quot;shiny/sample&quot;, appName = &quot;EB_KDR&quot;, appTitle = &quot;EB_KDR&quot;, launch.browser = FALSE, forceUpdate = TRUE)</code></pre>
 <pre><code>Preparing to deploy application...DONE
-Uploading bundle for application: 4392104...</code></pre>
-<pre><code>Warning in fileDependencies.R(file): Failed to parse /private/var/folders/
-5r/s597hc5j3w93_x8_tn57w3g80000gn/T/RtmpRHoVvI/file218554071202/app.R ;
-dependencies in this file will not be discovered.</code></pre>
-<pre><code>DONE
-Deploying bundle: 4825592 for application: 4392104 ...
-Waiting for task: 972837441
-  building: Processing bundle: 4825592
-  building: Building image: 5533158
+Uploading bundle for application: 4392104...DONE
+Deploying bundle: 4825615 for application: 4392104 ...
+Waiting for task: 972840433
+  building: Parsing manifest
+  building: Building image: 5533181
+  building: Installing system dependencies
+  building: Fetching packages
+  building: Building package: sparseMatrixStats
+  building: Building package: BiocSingular
+  building: Building package: scuttle
   building: Installing packages
   building: Installing files
-  building: Pushing image: 5533158
+  building: Pushing image: 5533181
   deploying: Starting instances
   rollforward: Activating new instances
   terminating: Stopping old instances
@@ -760,7 +796,7 @@ Application successfully deployed to https://jashmore.shinyapps.io/EB_KDR/</code
 <p>Allocate more memory to the iSEE application:</p>
 <pre class="r"><code>configureApp(appName = &quot;EB_KDR&quot;, appDir = &quot;shiny/sample&quot;, size = &quot;xxlarge&quot;)</code></pre>
 <pre><code>Preparing to deploy application...DONE
-Waiting for task: 972837816
+Waiting for task: 972841790
   deploying: Starting instances
   rollforward: Activating new instances
   terminating: Stopping old instances
