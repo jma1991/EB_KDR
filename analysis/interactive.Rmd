@@ -77,7 +77,7 @@ rownames(sce) <- scuttle::uniquifyFeatureNames(rowData(sce)$gene_id, rowData(sce
 
 # Define column data variables
 sce$EGFP <- counts(sce)["EGFP", ] > 0
-sce$Etv2 < counts(sce)["Etv2", ] > 0
+sce$Etv2 <- counts(sce)["Etv2", ] > 0
 sce$Kdr <- counts(sce)["Kdr", ] > 0
 sce$EGFP_AND_Etv2 <- sce$EGFP & sce$Kdr
 sce$Etv2_AND_Kdr <- sce$Etv2 & sce$Kdr
