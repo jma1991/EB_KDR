@@ -8,7 +8,8 @@ system("git add analysis/02-reduced-dimensions.Rmd")
 system("git add analysis/03-clustering.Rmd")
 system("git add analysis/04-marker-detection.Rmd")
 system("git add analysis/signaling-analysis.Rmd")
-system("git add analysis/interactive.Rmd")
+system("git add analysis/mouse-integration.Rmd")
+# system("git add analysis/interactive.Rmd")
 system("git commit -m 'Build'")
 
 # Step 2: Build HTML files
@@ -21,7 +22,8 @@ wflow_build("analysis/02-reduced-dimensions.Rmd")
 wflow_build("analysis/03-clustering.Rmd")
 wflow_build("analysis/04-marker-detection.Rmd")
 wflow_build("analysis/signaling-analysis.Rmd")
-wflow_build("analysis/interactive.Rmd")
+wflow_build("analysis/mouse-integration.Rmd")
+# wflow_build("analysis/interactive.Rmd")
 
 # Step 3: Add HTML files
 
@@ -33,7 +35,8 @@ system("git add docs/02-reduced-dimensions.html")
 system("git add docs/03-clustering.html")
 system("git add docs/04-marker-detection.html")
 system("git add docs/signaling-analysis.html")
-system("git add docs/interactive.html")
+system("git add docs/mouse-integration.html")
+# system("git add docs/interactive.html")
 
 # Step 4: Add PNG files
 
@@ -42,6 +45,7 @@ system("git add docs/figure/02-reduced-dimensions.Rmd")
 system("git add docs/figure/03-clustering.Rmd")
 system("git add docs/figure/04-marker-detection.Rmd")
 system("git add docs/figure/signaling-analysis.Rmd")
+system("git add docs/figure/mouse-integration.Rmd")
 
 # Step 5: Add site files
 
