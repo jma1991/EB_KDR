@@ -1,5 +1,5 @@
 ---
-title: "Mouse trajectory"
+title: "Mouse trajectory (Endothelium)"
 author: "James Ashmore"
 date: "2020-10-02"
 output: workflowr::wflow_html
@@ -15,7 +15,7 @@ Setup chunk options:
 knitr::opts_chunk$set(
   autodep    = TRUE,
   cache      = TRUE,
-  cache.path = "cache/mouse-trajectoryRmd/",
+  cache.path = "cache/mouse-trajectory.Rmd/",
   dev        = "png",
   error      = FALSE,
   message    = FALSE,
@@ -121,39 +121,14 @@ dat$neighbor <- FALSE
 dat$neighbor[dat$cell %in% knn$cell] <- TRUE
 ```
 
-Plot UMAP of kNN cells coloured by celltype:
+Plot TSNE of kNN cells coloured by celltype:
 
 ```{r}
-ggplot(dat, aes(UMAP.1, UMAP.2, colour = celltype)) + 
+ggplot(dat, aes(TSNE.1, TSNE.2, colour = celltype)) + 
   geom_point(size = 0.1) + 
   scale_colour_manual(
     name = "Celltype",
-    values = EmbryoCelltypeColours,
-    limits = force
-  ) + 
-  facet_grid(
-    rows = vars(neighbor),
-    cols = vars(source),
-    labeller = labeller(
-      neighbor = EmbryoNeighborLabels,
-      source = EmbryoSourceLabels
-    )
-  ) + 
-  guides(colour = guide_legend(override.aes = list(size = 1))) + 
-  theme_no_axes() +
-  theme(aspect.ratio = 1)
-```
-
-Plot UMAP of kNN cells coloured by genotype:
-
-```{r}
-ggplot(dat, aes(UMAP.1, UMAP.2, colour = genotype)) + 
-  geom_point(size = 0.1) + 
-  scale_colour_manual(
-    name = "Genotype",
-    values = EmbryoGenotypeColours,
-    labels = EmbryoGenotypeLabels,
-    limits = force
+    values = EmbryoCelltypeColours
   ) + 
   facet_grid(
     rows = vars(neighbor),
@@ -163,7 +138,28 @@ ggplot(dat, aes(UMAP.1, UMAP.2, colour = genotype)) +
       source = EmbryoSourceLabels
     )
   ) +
-  guides(colour = guide_legend(override.aes = list(size = 1))) +
+  theme_no_axes() +
+  theme(aspect.ratio = 1)
+```
+
+Plot TSNE of kNN cells coloured by genotype:
+
+```{r}
+ggplot(dat, aes(TSNE.1, TSNE.2, colour = genotype)) + 
+  geom_point(size = 0.1) + 
+  scale_colour_manual(
+    name = "Genotype",
+    values = EmbryoGenotypeColours,
+    labels = EmbryoGenotypeLabels
+  ) + 
+  facet_grid(
+    rows = vars(neighbor),
+    cols = vars(source),
+    labeller = labeller(
+      neighbor = EmbryoNeighborLabels,
+      source = EmbryoSourceLabels
+    )
+  ) +
   theme_no_axes() +
   theme(aspect.ratio = 1)
 ```
@@ -181,7 +177,7 @@ sce <- cbind(sce$atlas[, idx], sce$embryo)
 Select cells relevant to analysis:
 
 ```{r}
-use <- sce$celltype %in% c("Allantois",  "ExE mesoderm", "Haematoendothelial progenitors", "Endothelium")
+use <- sce$celltype %in% c("Allantois", "Endothelium", "ExE mesoderm", "Haematoendothelial progenitors")
 
 sce <- sce[, use]
 ```
@@ -191,9 +187,7 @@ Create a diffusion map from the batch-corrected PCA matrix:
 ```{r}
 set.seed(0101111001)
 
-sce <- runDiffusionMap(sce, dimred = "corrected", n_dimred = 1:10)
-
-plotDiffusionMap(sce, colour_by = "celltype")
+sce <- runDiffusionMap(sce, dimred = "corrected")
 ```
 
 Identify number of clusters to build a minimum spanning tree in slingshot:
@@ -300,8 +294,9 @@ set.seed(1010000010)
 
 sce <- slingshot(
   data = sce,
-  clusterLabels = sce$celltype,
-  reducedDim = "corrected"
+  clusterLabels = sce$slingClusters,
+  reducedDim = "DiffusionMap",
+  start.clus = 1
 )
 ```
 
@@ -313,16 +308,6 @@ sc1 <- embedCurves(sce, "DiffusionMap")
 sc1 <- slingCurves(sc1)[[1]]
 
 sc1 <- data.frame(sc1$s[sc1$ord, ])
-```
-
-Construct slingshot curve for trajectory 2:
-
-```{r}
-sc2 <- embedCurves(sce, "DiffusionMap")
-
-sc2 <- slingCurves(sc2)[[2]]
-
-sc2 <- data.frame(sc2$s[sc2$ord, ])
 ```
 
 Plot DiffusionMap of cells coloured by pseudotime 1:
@@ -337,18 +322,6 @@ ggcells(sce, aes(DiffusionMap.1, DiffusionMap.2)) +
   theme(aspect.ratio = 1)
 ```
 
-Plot DiffusionMap of cells coloured by pseudotime 2:
-
-```{r fig.width = 8, fig.height = 6}
-ggcells(sce, aes(DiffusionMap.1, DiffusionMap.2)) + 
-  geom_point(aes(colour = slingPseudotime_2), size = 3) + 
-  geom_path(data = sc2, aes(DC1, DC2), size = 1.5, arrow = arrow()) + 
-  scale_colour_viridis_c(name = "Pseudotime") + 
-  labs(x = "DC 1", y = "DC 2") + 
-  theme_bw() + 
-  theme(aspect.ratio = 1)
-```
-
 Plot DiffusionMap of cells coloured by cluster:
 
 ```{r fig.width = 8, fig.height = 6}
@@ -356,7 +329,6 @@ ggcells(sce, aes(DiffusionMap.1, DiffusionMap.2)) +
   geom_point(aes(colour = slingClusters), size = 3) + 
   scale_colour_manual(name = "Cluster", values = EmbryoClusterColours) + 
   geom_path(data = sc1, aes(DC1, DC2), size = 1.5, arrow = arrow()) + 
-  geom_path(data = sc2, aes(DC1, DC2), size = 1.5, arrow = arrow()) + 
   labs(x = "DC 1", y = "DC 2") + 
   theme_bw() + 
   theme(aspect.ratio = 1)
@@ -369,7 +341,6 @@ ggcells(sce, aes(DiffusionMap.1, DiffusionMap.2)) +
   geom_point(aes(colour = celltype), size = 3) + 
   scale_colour_manual(name = "Celltype", values = EmbryoCelltypeColours) + 
   geom_path(data = sc1, aes(DC1, DC2), size = 1.5, arrow = arrow()) + 
-  geom_path(data = sc2, aes(DC1, DC2), size = 1.5, arrow = arrow()) + 
   labs(x = "DC 1", y = "DC 2") + 
   theme_bw() + 
   theme(aspect.ratio = 1)
@@ -382,7 +353,6 @@ ggcells(sce, aes(DiffusionMap.1, DiffusionMap.2)) +
   geom_point(aes(colour = genotype), size = 3) + 
   scale_colour_manual(name = "Genotype", values = EmbryoGenotypeColours, label = EmbryoGenotypeLabels) + 
   geom_path(data = sc1, aes(DC1, DC2), size = 1.5, arrow = arrow()) + 
-  geom_path(data = sc2, aes(DC1, DC2), size = 1.5, arrow = arrow()) + 
   labs(x = "DC 1", y = "DC 2") + 
   theme_bw() + 
   theme(aspect.ratio = 1)
@@ -405,23 +375,6 @@ ggplot(dat, aes(slingPseudotime_1, genotype, colour = celltype)) +
   theme(aspect.ratio = 1)
 ```
 
-Plot cells ordered by pseudotime 2 and coloured by celltype:
-
-```{r}
-dat <- makePerCellDF(sce)
-
-dat <- subset(dat, !is.na(slingPseudotime_2))
-
-ggplot(dat, aes(slingPseudotime_2, genotype, colour = celltype)) + 
-  geom_quasirandom(groupOnX = FALSE) + 
-  scale_colour_manual(name = "Celltype", values = EmbryoCelltypeColours) + 
-  scale_y_discrete(labels = EmbryoGenotypeLabels) + 
-  facet_wrap(~ source, labeller = labeller(source = EmbryoSourceLabels)) + 
-  labs(x = "Pseudotime", y = "Genotype") + 
-  theme_bw() + 
-  theme(aspect.ratio = 1)
-```
-
 ## Summary
 
 ### Output
@@ -429,7 +382,7 @@ ggplot(dat, aes(slingPseudotime_2, genotype, colour = celltype)) +
 Save integrated experiment object to disk:
 
 ```{r}
-saveRDS(sce, file = "output/mouse-trajectory-endothelium.rds")
+saveRDS(sce, file = "output/mouse-trajectory.rds")
 ```
 
 ### Session
