@@ -259,7 +259,7 @@ dec <- metadata(sce)$combineVar
 
 hvg <- getTopHVGs(dec, n = 2000)
 
-idx <- which(rowData(sce)$gene_id %in% hvg)
+idx <- which(rownames(sce) %in% hvg)
 ```
 
 Fit the NB-GAM model to variable genes:
