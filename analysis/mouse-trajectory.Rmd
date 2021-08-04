@@ -1,5 +1,5 @@
 ---
-title: "Mouse trajectory (Endothelium)"
+title: "Mouse trajectory"
 author: "James Ashmore"
 date: "2020-10-02"
 output: workflowr::wflow_html
