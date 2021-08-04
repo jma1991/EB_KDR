@@ -485,28 +485,6 @@ plt <- lapply(ids, function(gene) {
 patchwork::wrap_plots(plt, nrow = 3, ncol = 5, guides = "collect") & theme(legend.position = 'bottom')
 ```
 
-Plot expression of 15 most significant genes (cells coloured by source):
-
-```{r fig.width = 14, fig.height = 9}
-ids <- head(rownames(res), n = 15)
-
-plt <- lapply(ids, function(gene) {
-
-  dat$expression <- assay(sce, "reconstructed")[gene, dat$cell]
-
-  ggplot(dat, aes(pseudotime, expression, group = lineage, colour = source)) +
-    geom_point() +
-    scale_colour_manual(values = EmbryoSourceColours, labels = EmbryoSourceLabels) +
-    geom_smooth(colour = "black", method = "loess") +
-    labs(title = gene, x = "Pseudotime", y = "Expression", colour = "Source") +
-    theme_bw() +
-    theme(aspect.ratio = 1)
-
-})
-
-patchwork::wrap_plots(plt, nrow = 3, ncol = 5, guides = "collect") & theme(legend.position = 'bottom')
-```
-
 ### Differential pattern test
 
 Test differences in expression patterns between lineages:
@@ -611,28 +589,6 @@ plt <- lapply(ids, function(gene) {
     scale_colour_manual(values = EmbryoClusterColours) +
     geom_smooth(colour = "black", method = "loess") +
     labs(title = gene, x = "Pseudotime", y = "Expression", colour = "Cluster") +
-    theme_bw() +
-    theme(aspect.ratio = 1)
-
-})
-
-patchwork::wrap_plots(plt, nrow = 3, ncol = 5, guides = "collect") & theme(legend.position = 'bottom')
-```
-
-Plot expression of 15 most significant genes (cells coloured by source):
-
-```{r fig.width = 14, fig.height = 9}
-ids <- head(rownames(res), n = 15)
-
-plt <- lapply(ids, function(gene) {
-
-  dat$expression <- assay(sce, "reconstructed")[gene, dat$cell]
-
-  ggplot(dat, aes(pseudotime, expression, group = lineage, colour = source)) +
-    geom_point() +
-    scale_colour_manual(values = EmbryoSourceColours, labels = EmbryoSourceLabels) +
-    geom_smooth(colour = "black", method = "loess") +
-    labs(title = gene, x = "Pseudotime", y = "Expression", colour = "Source") +
     theme_bw() +
     theme(aspect.ratio = 1)
 
@@ -751,28 +707,6 @@ plt <- lapply(ids, function(gene) {
     scale_colour_manual(values = EmbryoClusterColours) +
     geom_smooth(colour = "black", method = "loess") +
     labs(title = gene, x = "Pseudotime", y = "Expression", colour = "Cluster") +
-    theme_bw() +
-    theme(aspect.ratio = 1)
-
-})
-
-patchwork::wrap_plots(plt, nrow = 3, ncol = 5, guides = "collect") & theme(legend.position = 'bottom')
-```
-
-Plot expression of 15 most significant genes (cells coloured by source):
-
-```{r fig.width = 14, fig.height = 9}
-ids <- head(rownames(res), n = 15)
-
-plt <- lapply(ids, function(gene) {
-
-  dat$expression <- assay(sce, "reconstructed")[gene, dat$cell]
-
-  ggplot(dat, aes(pseudotime, expression, group = lineage, colour = source)) +
-    geom_point() +
-    scale_colour_manual(values = EmbryoSourceColours, labels = EmbryoSourceLabels) +
-    geom_smooth(colour = "black", method = "loess") +
-    labs(title = gene, x = "Pseudotime", y = "Expression", colour = "Source") +
     theme_bw() +
     theme(aspect.ratio = 1)
 
