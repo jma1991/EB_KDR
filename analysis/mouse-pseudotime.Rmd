@@ -1,0 +1,327 @@
+---
+title: "Mouse pseudotime"
+author: "James Ashmore"
+date: "2020-04-21"
+output: workflowr::wflow_html
+editor_options:
+  chunk_output_type: console
+---
+
+## Setup
+
+### Packages
+
+Set chunk options:
+
+```{r}
+knitr::opts_chunk$set(
+  autodep    = TRUE,
+  cache      = TRUE,
+  cache.path = "cache/mouse-pseudotime.Rmd/",
+  dev        = "png",
+  error      = FALSE,
+  message    = FALSE,
+  warning    = FALSE
+)
+```
+
+Load Bioconductor packages:
+
+```{r}
+library(BiocParallel)
+library(MouseGastrulationData)
+library(TSCAN)
+library(scater)
+library(scran)
+library(scuttle)
+library(slingshot)
+library(tradeSeq)
+```
+
+Load CRAN packages:
+
+```{r}
+library(RColorBrewer)
+library(pheatmap)
+```
+
+### Data
+
+Read experiment object:
+
+```{r}
+sce <- readRDS("output/mouse-trajectory.rds")
+```
+
+Make feature names unique:
+
+```{r}
+rownames(sce) <- uniquifyFeatureNames(rowData(sce)$gene_id, rowData(sce)$gene_name)
+```
+
+Make cell names unique:
+
+```{r}
+colnames(sce) <- seq_len(ncol(sce))
+```
+
+Convert slingshot clusters to a factor:
+
+```{r}
+sce$slingClusters <- as.factor(sce$slingClusters)
+```
+
+Tidy column data for plotting and visualization:
+
+```{r}
+dat <- colData(sce)
+
+dat <- cbind(cell = seq_len(ncol(sce)), dat)
+
+ids <- grep("slingPseudotime", colnames(dat), invert = TRUE)
+
+dat <- reshape2::melt(as.data.frame(dat), id.vars = ids, variable.name = "lineage", value.name = "pseudotime")
+
+dat$lineage <- gsub("slingPseudotime_", "", dat$lineage)
+```
+
+### Palettes
+
+Define palette colours:
+
+```{r}
+EmbryoCelltypeColours <- MouseGastrulationData::EmbryoCelltypeColours
+
+EmbryoGenotypeColours <- c("wt" = "#76B7B2", "het" = "#B07AA1", "hom" = "#EDC948")
+
+EmbryoSourceColours <- c("atlas" = "#BAB0AC", "embryo" = "#E15759")
+
+EmbryoClusterColours <- setNames(brewer.pal(nlevels(sce$slingClusters), name = "Set3"), levels(sce$slingClusters))
+```
+
+Define palette labels:
+
+```{r}
+EmbryoGenotypeLabels <- c("wt" = "Flk1 (WT)", "het" = "Flk1 (Het)", "hom" = "Flk1 (Hom)")
+
+EmbryoSourceLabels <- c("atlas" = "Embryo Atlas", "embryo" = "Embryo Body")
+```
+
+### Functions
+
+Define function to plot heatmap of gene expression values:
+
+```{r}
+plotHeatmap <- function(object, features, columns, order_columns_by) {
+  
+  obj <- object[features, columns]
+
+  mat <- t(scale(t(assay(obj, "reconstructed"))))
+
+  mat <- mat[, order(obj[[order_columns_by]])]
+
+  col <- colorRampPalette(rev(brewer.pal(5, name = "RdBu")))(100)
+
+  lim <- max(abs(mat))
+  
+  brk <- seq(-3, 3, length.out = 101)
+  
+  ann <- list(
+    
+    col = data.frame(
+      Celltype  = obj$celltype,
+      Genotype  = obj$genotype,
+      Source    = obj$source,
+      Cluster   = obj$slingClusters,
+      row.names = colnames(obj)
+    ),
+    
+    colors = list(
+      Celltype = EmbryoCelltypeColours[unique(obj$celltype)],
+      Genotype = EmbryoGenotypeColours[unique(obj$genotype)],
+      Source   = EmbryoSourceColours[unique(obj$source)],
+      Cluster  = EmbryoClusterColours[unique(obj$slingClusters)]
+    )
+  )
+
+  plt <- pheatmap(
+    mat = mat,
+    color = col, 
+    breaks = brk,
+    scale = "none",
+    cluster_cols = FALSE,
+    annotation_col = ann$col,
+    annotation_colors = ann$colors,
+    show_colnames = FALSE
+  )
+  
+  return(plt)
+
+}
+```
+
+## TSCAN
+
+Create metadata slot to keep test results:
+
+```{r}
+metadata(sce)$testPseudotime <- list(slingPseudotime_1 = NULL)
+```
+
+### Lineage 1
+
+Test for differences along pseudotime:
+
+```{r}
+de1 <- TSCAN::testPseudotime(sce, pseudotime = sce$slingPseudotime_1, df = 5, block = sce$batch)
+
+de1$ensembl <- rowData(sce)$gene_id
+
+de1$symbol <- rowData(sce)$gene_name
+
+de1 <- subset(de1, FDR < 0.05)
+
+de1 <- de1[order(abs(de1$logFC), decreasing = TRUE), ]
+
+metadata(sce)$testPseudotime$slingPseudotime_1 <- de1
+```
+
+Display table of significant genes:
+
+```{r}
+DT::datatable(
+  data = as.data.frame(de1[, c("ensembl", "symbol", "logFC", "p.value", "FDR")]), 
+  colnames = c("Ensembl", "Symbol", "FC", "P", "FDR"),
+  rownames = FALSE
+)
+```
+
+Display heatmap of significant genes:
+
+```{r fig.width = 14, fig.height = 9}
+plotHeatmap(
+  object = sce,
+  features = head(rownames(de1), n = 50),
+  columns = complete.cases(sce$slingPseudotime_1),
+  order_columns_by = "slingPseudotime_1"
+)
+```
+
+## TradeSeq
+
+### Linear model
+
+Evaluate the optimal number of knots:
+
+```{r eval = FALSE}
+set.seed(1001001001)
+
+aic <- evaluateK(counts = counts(sce), sds = SlingshotDataSet(sce))
+```
+
+Identify 2000 most variable genes:
+
+```{r}
+dec <- metadata(sce)$combineVar
+
+hvg <- getTopHVGs(dec, n = 2000)
+
+idx <- which(rowData(sce)$gene_id %in% hvg)
+```
+
+Fit the NB-GAM model to variable genes:
+
+```{r}
+fit <- fitGAM(
+  counts = counts(sce),
+  sds = SlingshotDataSet(sce),
+  U = model.matrix(~ batch, sce@colData),
+  genes = idx
+)
+```
+
+### Association test
+
+Test whether average gene expression is associated with pseudotime:
+
+```{r}
+res <- associationTest(fit, lineages = TRUE)
+
+res$ensembl <- rowData(sce)$gene_id[idx]
+
+res$symbol <- rowData(sce)$gene_name[idx]
+```
+
+Identify genes associated with lineage 1 pseudotime:
+
+```{r}
+de1 <- subset(res, p.adjust(pvalue_1, method = "fdr") < 0.05)
+
+de1 <- de1[order(de1$waldStat_1, decreasing = TRUE), ]
+
+DT::datatable(as.data.frame(de1), rownames = FALSE)
+```
+
+Save results table of significant genes for downstream analysis:
+
+```{r}
+metadata(sce)$associationTest <- list(slingPseudotime_1 = de1)
+```
+
+Plot expression of 50 most significant genes associated with lineage 1 pseudotime:
+
+```{r fig.width = 14, fig.height = 9}
+plotHeatmap(sce, features = head(rownames(de1), n = 50), columns = complete.cases(sce$slingPseudotime_1), order_columns_by = "slingPseudotime_1")
+```
+
+### Differential start vs end test
+
+Identify differentially expressed genes between the start and end of a lineage:
+
+```{r}
+res <- startVsEndTest(fit, lineages = TRUE)
+
+res$ensembl <- rowData(sce)$gene_id[idx]
+
+res$symbol <- rowData(sce)$gene_name[idx]
+```
+
+Extract significant genes for lineage 1 pseudotime:
+
+```{r}
+de1 <- subset(res, p.adjust(pvalue_lineage1, method = "fdr") < 0.05)
+
+de1 <- de1[order(de1$waldStat_lineage1, decreasing = TRUE), ]
+
+DT::datatable(as.data.frame(de1), rownames = FALSE)
+```
+
+Save results table of significant genes for downstream analysis:
+
+```{r}
+metadata(sce)$startVsEndTest <- list(slingPseudotime_1 = de1)
+```
+
+Plot expression of 50 most significant genes for lineage 1 pseudotime:
+
+```{r fig.width = 14, fig.height = 9}
+plotHeatmap(sce, features = head(rownames(de1), n = 50), columns = complete.cases(sce$slingPseudotime_1), order_columns_by = "slingPseudotime_1")
+```
+
+## Summary
+
+Save experiment object with tradeSeq results:
+
+```{r}
+rownames(sce) <- rowData(sce)$gene_id
+
+colnames(sce) <- NULL
+
+saveRDS(sce, file = "output/mouse-pseudotime.rds")
+```
+
+Print session information:
+
+```{r}
+sessionInfo()
+```
