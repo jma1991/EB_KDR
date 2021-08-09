@@ -369,6 +369,33 @@ div.tocify {
     <li>
       <a href="signaling-analysis.html">Signaling analysis</a>
     </li>
+    <li>
+      <a href="scenic-analysis.html">SCENIC analysis</a>
+    </li>
+    <li>
+      <a href="trajectory-analysis.html">Trajectory analysis</a>
+    </li>
+    <li>
+      <a href="pseudotime-analysis.html">Pseudotime analysis</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Mouse Atlas
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="mouse-integration.html">Mouse integration</a>
+    </li>
+    <li>
+      <a href="mouse-trajectory.html">Mouse trajectory</a>
+    </li>
+    <li>
+      <a href="mouse-pseudotime.html">Mouse pseudotime</a>
+    </li>
   </ul>
 </li>
 <li>
@@ -396,7 +423,7 @@ div.tocify {
 
 <h1 class="title toc-ignore">Interactive data exploration</h1>
 <h4 class="author">James Ashmore</h4>
-<h4 class="date">30 July, 2021</h4>
+<h4 class="date">09 August, 2021</h4>
 
 </div>
 
@@ -421,7 +448,7 @@ div.tocify {
 <div class="tab-content">
 <div id="summary" class="tab-pane fade in active">
 <p>
-<strong>Last updated:</strong> 2021-07-30
+<strong>Last updated:</strong> 2021-08-09
 </p>
 <p>
 <strong>Checks:</strong> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> 7 <span class="glyphicon glyphicon-exclamation-sign text-danger" aria-hidden="true"></span> 0
@@ -512,16 +539,16 @@ This reproducible <a href="http://rmarkdown.rstudio.com">R Markdown</a> analysis
 <div class="panel panel-default">
 <div class="panel-heading">
 <p class="panel-title">
-<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjma1991EBKDRtreec2543c7316c52d2d601e5dc75be4ae6062850f9btargetblankc2543c7a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jma1991/EB_KDR/tree/c2543c7316c52d2d601e5dc75be4ae6062850f9b" target="_blank">c2543c7</a> </a>
+<a data-toggle="collapse" data-parent="#workflowr-checks" href="#strongRepositoryversionstrongahrefhttpsgithubcomjma1991EBKDRtree9b81f21784f10560258bb6c933df172d40430ac9targetblank9b81f21a"> <span class="glyphicon glyphicon-ok text-success" aria-hidden="true"></span> <strong>Repository version:</strong> <a href="https://github.com/jma1991/EB_KDR/tree/9b81f21784f10560258bb6c933df172d40430ac9" target="_blank">9b81f21</a> </a>
 </p>
 </div>
-<div id="strongRepositoryversionstrongahrefhttpsgithubcomjma1991EBKDRtreec2543c7316c52d2d601e5dc75be4ae6062850f9btargetblankc2543c7a" class="panel-collapse collapse">
+<div id="strongRepositoryversionstrongahrefhttpsgithubcomjma1991EBKDRtree9b81f21784f10560258bb6c933df172d40430ac9targetblank9b81f21a" class="panel-collapse collapse">
 <div class="panel-body">
 <p>
 Great! You are using Git for version control. Tracking code development and connecting the code version to the results is critical for reproducibility.
 </p>
 <p>
-The results in this page were generated with repository version <a href="https://github.com/jma1991/EB_KDR/tree/c2543c7316c52d2d601e5dc75be4ae6062850f9b" target="_blank">c2543c7</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
+The results in this page were generated with repository version <a href="https://github.com/jma1991/EB_KDR/tree/9b81f21784f10560258bb6c933df172d40430ac9" target="_blank">9b81f21</a>. See the <em>Past versions</em> tab to see a history of the changes made to the R Markdown and HTML files.
 </p>
 <p>
 Note that you need to be careful to ensure that all relevant files for the analysis have been committed to Git prior to generating the results (you can use <code>wflow_publish</code> or <code>wflow_git_commit</code>). workflowr only checks the R Markdown file, but you know if there are other scripts or data files that it depends on. Below is the status of the Git repository when the results were generated:
@@ -531,12 +558,21 @@ Ignored files:
     Ignored:    .DS_Store
     Ignored:    .Rproj.user/
     Ignored:    analysis/cache/
+    Ignored:    output/pyscenic/
     Ignored:    renv/.gitignore
     Ignored:    renv/library/
     Ignored:    renv/local/
     Ignored:    renv/settings.dcf
     Ignored:    renv/staging/
     Ignored:    shiny/
+
+Untracked files:
+    Untracked:  code/intersectRows.R
+    Untracked:  code/quickCorrect.R
+
+Unstaged changes:
+    Modified:   _workflowr.R
+    Modified:   analysis/_site.yml
 
 </code></pre>
 <p>
@@ -575,6 +611,40 @@ Message
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>
+Rmd
+</td>
+<td>
+<a href="https://github.com/jma1991/EB_KDR/blob/9b81f21784f10560258bb6c933df172d40430ac9/analysis/interactive.Rmd" target="_blank">9b81f21</a>
+</td>
+<td>
+James Ashmore
+</td>
+<td>
+2021-08-09
+</td>
+<td>
+Build
+</td>
+</tr>
+<tr>
+<td>
+html
+</td>
+<td>
+<a href="https://rawcdn.githack.com/jma1991/EB_KDR/960bb0ae869cdc4eb288f27d668feaf7af0bf74b/docs/interactive.html" target="_blank">960bb0a</a>
+</td>
+<td>
+James Ashmore
+</td>
+<td>
+2021-07-30
+</td>
+<td>
+Build
+</td>
+</tr>
 <tr>
 <td>
 Rmd
@@ -755,16 +825,11 @@ Build
 <div id="setup" class="section level2">
 <h2>Setup</h2>
 <p>Set chunk options:</p>
-<pre class="r"><code>knitr::opts_chunk$set(eval = TRUE)</code></pre>
+<pre class="r"><code>knitr::opts_chunk$set(eval = FALSE)</code></pre>
 <p>Load CRAN packages:</p>
 <pre class="r"><code>library(rsconnect)</code></pre>
 <p>Include Bioconductor package repositories:</p>
 <pre class="r"><code>options(repos = BiocManager::repositories())</code></pre>
-<pre><code>&#39;getOption(&quot;repos&quot;)&#39; replaces Bioconductor standard repositories, see
-&#39;?repositories&#39; for details
-
-replacement repositories:
-    CRAN: http://cran.rstudio.com</code></pre>
 <p>Automatically answer yes to any user prompt:</p>
 <pre class="r"><code>options(needs.promptUser = FALSE)</code></pre>
 <p>Delete existing shiny directory:</p>
@@ -780,7 +845,6 @@ replacement repositories:
 <pre class="r"><code>dir.create(&quot;shiny/sample&quot;, showWarnings = FALSE, mode = &quot;0755&quot;)</code></pre>
 <p>Copy sample data to iSEE directory:</p>
 <pre class="r"><code>file.copy(&quot;output/04-marker-detection.rds&quot;, &quot;shiny/sample/data.rds&quot;, overwrite = TRUE)</code></pre>
-<pre><code>[1] TRUE</code></pre>
 <p>Write code to iSEE application file:</p>
 <pre class="r r"><code># Load required packages
 library(iSEE)
@@ -867,29 +931,8 @@ ecm &lt;- ExperimentColorMap(
 iSEE(sce, appTitle = &quot;EB_KDR&quot;, colormap = ecm)</code></pre>
 <p>Deploy the iSEE application to the shiny server:</p>
 <pre class="r"><code>deployApp(appDir = &quot;shiny/sample&quot;, appName = &quot;EB_KDR&quot;, appTitle = &quot;EB_KDR&quot;, launch.browser = FALSE, forceUpdate = TRUE)</code></pre>
-<pre><code>Preparing to deploy application...DONE
-Uploading bundle for application: 4392104...DONE
-Deploying bundle: 4872173 for application: 4392104 ...
-Waiting for task: 981620630
-  building: Parsing manifest
-  building: Building image: 5584410
-  building: Installing system dependencies
-  building: Fetching packages
-  building: Installing packages
-  building: Installing files
-  building: Pushing image: 5584410
-  deploying: Starting instances
-  rollforward: Activating new instances
-  unstaging: Stopping old instances
-Application successfully deployed to https://jashmore.shinyapps.io/EB_KDR/</code></pre>
 <p>Allocate more memory to the iSEE application:</p>
 <pre class="r"><code>configureApp(appName = &quot;EB_KDR&quot;, appDir = &quot;shiny/sample&quot;, size = &quot;xlarge&quot;)</code></pre>
-<pre><code>Preparing to deploy application...DONE
-Waiting for task: 981622003
-  deploying: Starting instances
-  rollforward: Activating new instances
-  terminating: Stopping old instances
-Application successfully deployed to https://jashmore.shinyapps.io/EB_KDR/</code></pre>
 </div>
 </div>
 <div id="summary" class="section level2">
@@ -898,38 +941,6 @@ Application successfully deployed to https://jashmore.shinyapps.io/EB_KDR/</code
 <h3>Session</h3>
 <p>Print session information:</p>
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>R version 4.0.2 (2020-06-22)
-Platform: x86_64-apple-darwin17.0 (64-bit)
-Running under: macOS Catalina 10.15.7
-
-Matrix products: default
-BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
-LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
-
-locale:
-[1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
-
-attached base packages:
-[1] stats     graphics  grDevices datasets  utils     methods   base     
-
-other attached packages:
-[1] rsconnect_0.8.18 workflowr_1.6.2 
-
-loaded via a namespace (and not attached):
- [1] Rcpp_1.0.7          pillar_1.6.1        compiler_4.0.2     
- [4] bslib_0.2.5.1       later_1.2.0         BiocManager_1.30.16
- [7] jquerylib_0.1.4     git2r_0.28.0        tools_4.0.2        
-[10] packrat_0.6.0       digest_0.6.27       jsonlite_1.7.2     
-[13] evaluate_0.14       lifecycle_1.0.0     tibble_3.1.2       
-[16] pkgconfig_2.0.3     rlang_0.4.11        curl_4.3.2         
-[19] yaml_2.2.1          xfun_0.24           stringr_1.4.0      
-[22] knitr_1.33          fs_1.5.0            vctrs_0.3.8        
-[25] sass_0.4.0          askpass_1.1         rprojroot_2.0.2    
-[28] glue_1.4.2          R6_2.5.0            fansi_0.5.0        
-[31] rmarkdown_2.9       magrittr_2.0.1      whisker_0.4        
-[34] promises_1.2.0.1    ellipsis_0.3.2      htmltools_0.5.1.1  
-[37] renv_0.13.2         httpuv_1.6.1        utf8_1.2.1         
-[40] stringi_1.7.2       openssl_1.4.4       crayon_1.4.1       </code></pre>
 <br>
 <p>
 <button type="button" class="btn btn-default btn-workflowr btn-workflowr-sessioninfo" data-toggle="collapse" data-target="#workflowr-sessioninfo" style="display: block;">
@@ -938,38 +949,6 @@ loaded via a namespace (and not attached):
 </p>
 <div id="workflowr-sessioninfo" class="collapse">
 <pre class="r"><code>sessionInfo()</code></pre>
-<pre><code>R version 4.0.2 (2020-06-22)
-Platform: x86_64-apple-darwin17.0 (64-bit)
-Running under: macOS Catalina 10.15.7
-
-Matrix products: default
-BLAS:   /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRblas.dylib
-LAPACK: /Library/Frameworks/R.framework/Versions/4.0/Resources/lib/libRlapack.dylib
-
-locale:
-[1] en_GB.UTF-8/en_GB.UTF-8/en_GB.UTF-8/C/en_GB.UTF-8/en_GB.UTF-8
-
-attached base packages:
-[1] stats     graphics  grDevices datasets  utils     methods   base     
-
-other attached packages:
-[1] rsconnect_0.8.18 workflowr_1.6.2 
-
-loaded via a namespace (and not attached):
- [1] Rcpp_1.0.7          pillar_1.6.1        compiler_4.0.2     
- [4] bslib_0.2.5.1       later_1.2.0         BiocManager_1.30.16
- [7] jquerylib_0.1.4     git2r_0.28.0        tools_4.0.2        
-[10] packrat_0.6.0       digest_0.6.27       jsonlite_1.7.2     
-[13] evaluate_0.14       lifecycle_1.0.0     tibble_3.1.2       
-[16] pkgconfig_2.0.3     rlang_0.4.11        curl_4.3.2         
-[19] yaml_2.2.1          xfun_0.24           stringr_1.4.0      
-[22] knitr_1.33          fs_1.5.0            vctrs_0.3.8        
-[25] sass_0.4.0          askpass_1.1         rprojroot_2.0.2    
-[28] glue_1.4.2          R6_2.5.0            fansi_0.5.0        
-[31] rmarkdown_2.9       magrittr_2.0.1      whisker_0.4        
-[34] promises_1.2.0.1    ellipsis_0.3.2      htmltools_0.5.1.1  
-[37] renv_0.13.2         httpuv_1.6.1        utf8_1.2.1         
-[40] stringi_1.7.2       openssl_1.4.4       crayon_1.4.1       </code></pre>
 </div>
 </div>
 </div>
