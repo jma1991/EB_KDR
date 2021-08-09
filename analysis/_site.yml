@@ -21,12 +21,20 @@ navbar:
       menu:
         - text: "Signaling analysis"
           href: signaling-analysis.html
+        - text: "SCENIC analysis"
+          href: scenic-analysis.html
+        - text: "Trajectory analysis"
+          href: trajectory-analysis.html
+        - text: "Pseudotime analysis"
+          href: pseudotime-analysis.html
     - text: "Mouse Atlas"
       menu:
         - text: "Mouse integration"
           href: mouse-integration.html
         - text: "Mouse trajectory"
           href: mouse-trajectory.html
+        - text: "Mouse pseudotime"
+          href: mouse-pseudotime.html
     - text: "Interactive"
       href: interactive.html
   right:
